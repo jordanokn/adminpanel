@@ -1,0 +1,4 @@
+check:
+		isort .
+		black .
+		mypy .
