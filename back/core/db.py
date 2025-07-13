@@ -49,7 +49,7 @@ class AsyncDB:
         async with self._pool.connection() as con:
             self._connection = con
 
-    async def cursor(self, row_factory) -> AsyncGenerator[AsyncCursor, None]:
+    async def cursor(self, row_factory=None) -> AsyncGenerator[AsyncCursor, None]:
         if not self._connection:
             raise RuntimeError(
                 "Database pool is not initializated. Please use .connect()"
@@ -57,6 +57,9 @@ class AsyncDB:
 
         async with self._connection.cursor(row_factory=row_factory) as cur:
             yield cur
+
+    async def close(self):
+        await self._pool.close()
 
 
 if __name__ == "__main__":
@@ -74,5 +77,11 @@ if __name__ == "__main__":
         db = AsyncDB("localhost", 5432, "fiah", "postgres", "pass")
         await db.connect()
         await asyncio.gather(*[test(db) for _ in range(10)])
+        await db.close()
+
+        try:
+            await asyncio.gather(*[test(db) for _ in range(10)])
+        except Exception:
+            print("Все гуд")
 
     asyncio.run(main())
