@@ -49,13 +49,13 @@ class AsyncDB:
         async with self._pool.connection() as con:
             self._connection = con
 
-    async def cursor(self) -> AsyncGenerator[AsyncCursor, None]:
+    async def cursor(self, row_factory) -> AsyncGenerator[AsyncCursor, None]:
         if not self._connection:
             raise RuntimeError(
                 "Database pool is not initializated. Please use .connect()"
             )
 
-        async with self._connection.cursor() as cur:
+        async with self._connection.cursor(row_factory=row_factory) as cur:
             yield cur
 
 
