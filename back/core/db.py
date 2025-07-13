@@ -7,19 +7,6 @@ from psycopg_pool import AsyncConnectionPool
 class AsyncDB:
     """
     Асинхронная обертка для работы с PostgreSQL через psycopg3 с пулом соединений.
-    Пул инициализируется один раз при создании экземпляра класса.
-
-    Пример использования:
-    db = AsyncDB(
-        host="localhost",
-        port=5432,
-        dbname="your_db",
-        user="your_user",
-        password="your_password",
-        connection_pool_min_size=2,
-        connection_pool_max_size=10
-    )
-    TODO: для доступа к другим дб нужно еще сделать асинхронный контекстный менеджер, для удобства
     """
 
     _connection: Any = None
