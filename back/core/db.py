@@ -61,6 +61,13 @@ class AsyncDB:
     async def close(self):
         await self._pool.close()
 
+    async def __aenter__(self):
+        await self.connect()
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb):
+        await self.close()
+
 
 if __name__ == "__main__":
     import asyncio
@@ -78,6 +85,9 @@ if __name__ == "__main__":
         await db.connect()
         await asyncio.gather(*[test(db) for _ in range(10)])
         await db.close()
+
+        async with AsyncDB("localhost", 5432, "fiah", "postgres", "pass") as db:
+            await asyncio.gather(*[test(db) for _ in range(10)])
 
         try:
             await asyncio.gather(*[test(db) for _ in range(10)])
