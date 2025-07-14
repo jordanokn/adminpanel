@@ -1,0 +1,2 @@
+class CheckListRepository:
+    pass
